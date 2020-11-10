@@ -1,0 +1,36 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - nginx
+
+# lets aws configure ubuntu user with the created key-pair
+
+# create the nginx configuration server file for the web app
+# keep it simple, listen on port 80 for ipv4 and ipv4
+# add root webpage dir on /home/ubuntu/myserver
+
+write_files:
+  - path: /etc/nginx/sites-available/myserver
+    content: |
+      server {
+        listen 443;
+        ssl on;
+        ssl_certificate /home/ubuntu/myCA/server.crt;
+        ssl_certificate_key /home/ubuntu/myCA/server.key;
+        root /home/ubuntu/myserver;
+        index index.html;
+        server_name _;
+        location / {
+          try_files $uri $uri/ =404;
+        }
+      }
+                                                  
+runcmd:
+  - rm /etc/nginx/sites-enabled/default
+  - [ln, -s, /etc/nginx/sites-available/myserver, /etc/nginx/sites-enabled/]
+
+power_state:
+  mode: reboot
+  timeout: 30
