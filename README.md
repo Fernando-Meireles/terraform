@@ -1,4 +1,4 @@
-# terraform Simple System
+# Terraform Simple System
 Terraform experiment with AWS
   - New VPC with a private and a DMZ sub networks;
   - SSH bastion for ssh access to the resources inside the VPC;
